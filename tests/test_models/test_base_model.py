@@ -37,9 +37,9 @@ class TestBaseModel(unittest.TestCase):
         This test case tests wither the assigned instance id
         differes from other instance's id or not
         """
-        self.assertIsInstance(base1.id, uuid.UUID, msg="Error: Invalid uuid")
-        self.assertIsInstance(base2.id, uuid.UUID, msg="Error: Invalid uuid")
-        self.assertNotEqual(base1.id, base2.id, msg="Error: Ids are the same")
+        self.assertIsInstance(base1.id, str)
+        self.assertIsInstance(base2.id, str)
+        self.assertNotEqual(base1.id, base2.id)
 
     def test_created_at(self):
         """
@@ -48,10 +48,9 @@ class TestBaseModel(unittest.TestCase):
         This test case tests wither the assigned instance timestamp is created
         correctly and both creation and update times are equal.
         """
-        err_msg = "Error: Invalid timestamp"
-        self.assertIsInstance(base1.created_at, datetime, err_msg)
-        self.assertIsInstance(base1.updated_at, datetime, err_msg)
-        self.assertEqual(base1.created_at, base1.updated_at, err_msg)
+        self.assertIsInstance(base1.created_at, datetime)
+        self.assertIsInstance(base1.updated_at, datetime)
+        self.assertEqual(base1.created_at, base1.updated_at)
 
     def test_update_timestamp(self):
         """
