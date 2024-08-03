@@ -7,7 +7,7 @@ functions as it is intended to.
 
 The module achives this by the help of the unittest module.
 """
-from datetime import datetime
+import datetime
 from models.base_model import BaseModel
 import unittest
 import uuid
@@ -27,8 +27,8 @@ class TestBaseModel(unittest.TestCase):
 
         sets up instances of the BaseModel class.
         """
-        base1 = BaseModel()
-        base2 = BaseModel()
+        self.base1 = BaseModel()
+        self.base2 = BaseModel()
 
     def test_unique_id(self):
         """
@@ -37,9 +37,9 @@ class TestBaseModel(unittest.TestCase):
         This test case tests wither the assigned instance id
         differes from other instance's id or not
         """
-        self.assertIsInstance(base1.id, str)
-        self.assertIsInstance(base2.id, str)
-        self.assertNotEqual(base1.id, base2.id)
+        self.assertIsInstance(self.base1.id, str)
+        self.assertIsInstance(self.base2.id, str)
+        self.assertNotEqual(self.base1.id, base2.id)
 
     def test_created_at(self):
         """
@@ -48,9 +48,9 @@ class TestBaseModel(unittest.TestCase):
         This test case tests wither the assigned instance timestamp is created
         correctly and both creation and update times are equal.
         """
-        self.assertIsInstance(base1.created_at, datetime)
-        self.assertIsInstance(base1.updated_at, datetime)
-        self.assertEqual(base1.created_at, base1.updated_at)
+        self.assertIsInstance(self.base1.created_at, datetime)
+        self.assertIsInstance(self.base1.updated_at, datetime)
+        self.assertEqual(self.base1.created_at, self.base1.updated_at)
 
     def test_update_timestamp(self):
         """
@@ -60,10 +60,23 @@ class TestBaseModel(unittest.TestCase):
         when the save method is called or not. Also, tests if the updated
         timestamp is greater than the old timestamp
         """
-        old_time = base1.updated_at
-        base1.save()
-        self.assertNotEqual(old_time, base1.updated_at)
-        self.assertTrue(base1.updated_at > old_time)
+        old_time = self.base1.updated_at
+        self.base1.save()
+        self.assertNotEqual(old_time, self.base1.updated_at)
+        self.assertTrue(self.base1.updated_at > old_time)
+
+    def test_init_from_dict(self):
+        """
+        test_init_from_dict test case.
+
+        This test case tests the initializing process form a passed dictionary
+        to the __init__() method.
+        """
+        bm1_dict = self.base1.to_dict()
+        bm_from_dict = BaseModel(**bm1_dict)
+        self.assertEqual(new_bm.id, self.base1.id)
+        self.assertEqual(new_bm.created_at, self.base1.created_at)
+        self.assertEqual(new_bm.updated_at, self.base1.updated_at)
 
     def test_dictionary_repr(self):
         """
@@ -77,12 +90,12 @@ class TestBaseModel(unittest.TestCase):
             - create date
             - update date
         """
-        bm_dict = base1.to_dict()
+        bm_dict = self.base1.to_dict()
         self.assertIsInstance(bm_dict, dict)
-        self.assertEqual(bm_dict['id'], str(base1.id))
+        self.assertEqual(bm_dict['id'], str(self.base1.id))
         self.assertEqual(bm_dict['__class__'], 'BaseModel')
-        self.assertEqual(bm_dict['created_at'], base1.created_at.isoformat())
-        self.assertEqual(bm_dict['updated_at'], base1.updated_at.isoformat())
+        self.assertEqual(bm_dict['created_at'], self.base1.created_at.isoformat())
+        self.assertEqual(bm_dict['updated_at'], self.base1.updated_at.isoformat())
 
     def test_string_repr(self):
         """
@@ -92,8 +105,11 @@ class TestBaseModel(unittest.TestCase):
         check if it contains the required info:
             e.g. [<class name>] (<self.id>) <self.__dict__>
         """
-        expected_str = "[BaseModel] ({}) {}".format(base1.id, base1.__dict__)
-        self.assertEqual(str(base1), expected_str)
+        expected_str = "[BaseModel] ({}) {}".format(
+                            self.base1.id,
+                            self.base1.__dict__
+                        )
+        self.assertEqual(str(self.base1), expected_str)
 
 
 if __name__ == "__main__":

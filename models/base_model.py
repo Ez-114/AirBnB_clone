@@ -32,7 +32,7 @@ class BaseModel:
     attributes and methods for other model classes.
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         BaseModel.__init__() Initialization method.
 
@@ -40,12 +40,17 @@ class BaseModel:
         giving it its unique identifiers.
         """
 
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.datetime.now()
 
-        # Consider that the instace being constructed so create and update
-        # dates are equal
-        self.updated_at = datetime.datetime.now()
+        if kwargs:
+            for key, val in kwargs.items():
+                if key == 'created_at' or key == 'updated_at':
+                    val = datetime.datetime.fromisoformat(val)
+                if key != '__class__':
+                    setattr(self, key, val)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.datetime.now()
+            self.updated_at = self.created_at 
 
     def save(self):
         """
