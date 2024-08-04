@@ -24,6 +24,10 @@ class HBNBCommand(cmd.Cmd):
         """Exit the interpreter using the quit command.
         """
         return True
+    
+    def emptyline(self):
+        """Do nothing on empty input line."""
+        pass
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
