@@ -49,8 +49,7 @@ class FileStorage:
 
         Sets in __objects the obj with key <obj class name>.id
         """
-        new_obj_key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        FileStorage.__objects[new_obj_key] = obj
+        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
         """
@@ -58,13 +57,12 @@ class FileStorage:
 
         Serializes __objects to the JSON file (path: __file_path)
         """
-        obj_dicts = {
-            key: obj.to_dict() for key, obj in FileStorage.__objects.items()
-        }
-
-        # open and store in JSON file
-        with open(FileStorage.__file_path, mode='w', encoding='utf-8') as f:
-            json.dump(obj_dicts, f)
+        with open(FileStorage.__file_path, 'w') as f:
+            temp = {}
+            temp.update(FileStorage.__objects)
+            for key, val in temp.items():
+                temp[key] = val.to_dict()
+            json.dump(temp, f)
 
     def reload(self):
         """
