@@ -29,6 +29,15 @@ class TestFileStorage(unittest.TestCase):
         self.bm1 = BaseModel()
         self.bm2 = BaseModel()
 
+    def test_class_attribute(self):
+        """
+        test_class_attribute test case.
+        
+        Tests the data type of __objects class attr.
+        """
+        self.assertIsInstance(storage._FileStorage__objects, dict)
+        self.assertIsInstance(storage.all(), dict)        
+
     def test_file_storage_save(self):
         """
         test_file_storage_save test case.
