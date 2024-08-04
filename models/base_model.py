@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-models/base_models.py
+models.base_models.py Module.
 
 This module defines the BaseModel class in the models package
 that serves as a base class for all other models.
@@ -22,6 +22,7 @@ its timestamps.
 
 import datetime
 import uuid
+import models
 
 
 class BaseModel:
@@ -34,7 +35,7 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """
-        BaseModel.__init__() Initialization method.
+        BaseModel.__init__() Instance initialization method.
 
         It initializes a new BaseModel instance
         giving it its unique identifiers.
@@ -50,7 +51,8 @@ class BaseModel:
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.datetime.now()
-            self.updated_at = self.created_at 
+            self.updated_at = self.created_at
+            models.storage.new(self)
 
     def save(self):
         """
@@ -61,6 +63,7 @@ class BaseModel:
         """
 
         self.updated_at = datetime.datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """
