@@ -41,7 +41,6 @@ class BaseModel:
         giving it its unique identifiers.
         """
 
-
         if kwargs:
             for key, val in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
@@ -61,7 +60,6 @@ class BaseModel:
         Updates the public instance attribute `updated_at` with the current
         new timestamp.
         """
-
         self.updated_at = datetime.datetime.now()
         models.storage.save()
 
@@ -74,7 +72,7 @@ class BaseModel:
             - all instance attributes.
             - the class name.
             - its timestamps in iso format
-        
+
         Returns:
             dict: The created dictionary representation.
         """
