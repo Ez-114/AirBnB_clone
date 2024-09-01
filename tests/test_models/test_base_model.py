@@ -10,7 +10,6 @@ The module achives this by the help of the unittest module.
 from models.base_model import BaseModel
 import unittest
 import datetime
-from uuid import UUID
 import json
 import os
 
@@ -40,9 +39,9 @@ class test_basemodel(unittest.TestCase):
 
     def tearDown(self):
         """
-        called after each test method. 
-        
-        It attempts to remove the file.json file, 
+        called after each test method.
+
+        It attempts to remove the file.json file,
         which is likely created during tests to ensure
         a clean state for subsequent tests.
         """
