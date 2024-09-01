@@ -24,8 +24,8 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
     classes_list = [
-        'BaseModel', 'User', 'Author', 'Book',
-        'Genre', 'Publisher', 'Rate', 'Review'
+        'BaseModel', 'User', 'State',
+        'City', 'Amentiy', 'Place', 'Review'
     ]
 
     def do_create(self, line):
