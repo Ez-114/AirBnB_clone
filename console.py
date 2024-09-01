@@ -6,6 +6,7 @@ Contains the entry point of the command interpreter.
 """
 import cmd
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 
@@ -15,13 +16,22 @@ class HBNBCommand(cmd.Cmd):
 
     Implements the command interpreter of the AirBNB project.
     """
+
     prompt = "(hbnb) "
+    classes_list = [
+        'BaseModel', 'User', 'Author', 'Book',
+        'Genre', 'Publisher', 'Rate', 'Review'
+    ]
 
     def do_create(self, line):
         """
         Creates a new instance of BaseModel, saves it (to the JSON file),
         and prints the id.
         """
+        classes_dict = {
+            'BaseModel': BaseModel, 'User': User
+        }
+
         if not line:
             print("** class name missing **")
         elif line != "BaseModel":
@@ -59,7 +69,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         # Check for instance name
-        if instance_data[0] != "BaseModel":
+        if instance_data[0] not in HBNBCommand.classes_list:
             print("** class doesn't exist **")
             return
 
@@ -103,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         # Check for instance name
-        if instance_data[0] != "BaseModel":
+        if instance_data[0] not in HBNBCommand.classes_list:
             print("** class doesn't exist **")
             return
 
@@ -143,7 +153,7 @@ class HBNBCommand(cmd.Cmd):
 
         if line:
             args = line.split(' ')[0]  # remove possible trailing args
-            if args != "BaseModel":
+            if args not in HBNBCommand.classes_list:
                 print("** class doesn't exist **")
                 return
             for k, v in storage._FileStorage__objects.items():
@@ -186,7 +196,7 @@ class HBNBCommand(cmd.Cmd):
         instance_data = args[:2]  # Class name > [0] and instance id > [1]
 
         # Now check if class name is valid
-        if instance_data[0] != "BaseModel":
+        if instance_data[0] not in HBNBCommand.classes_list:
             print("** class doesn't exist **")
             return
 

@@ -33,7 +33,7 @@ class BaseModel:
     attributes and methods for other model classes.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *_, **kwargs):
         """
         BaseModel.__init__() Instance initialization method.
 

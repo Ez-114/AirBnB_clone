@@ -8,7 +8,6 @@ from their classes.
 """
 import json
 import os
-from models.base_model import BaseModel
 
 
 class FileStorage:
@@ -57,12 +56,15 @@ class FileStorage:
 
         Serializes __objects to the JSON file (path: __file_path)
         """
-        with open(FileStorage.__file_path, 'w') as f:
-            temp = {}
-            temp.update(FileStorage.__objects)
-            for key, val in temp.items():
-                temp[key] = val.to_dict()
-            json.dump(temp, f)
+        json_objects = FileStorage.__objects.copy()
+        for obj_id, obj in json_objects.items():
+            json_objects[obj_id] = obj.to_dict()
+
+        # Open the file that will save our objects data
+        with open(FileStorage.__file_path, mode='w', encoding='utf-8') \
+                as storage_file:
+
+            json.dump(json_objects, storage_file)
 
     def reload(self):
         """
@@ -71,10 +73,22 @@ class FileStorage:
         Deserializes the JSON file to __objects
         (only if the JSON file (__file_path) exists ; otherwise, do nothing.)
         """
+
+        from models.base_model import BaseModel
+        from models.user import User
+
+        classes_dict = {
+            'BaseModel': BaseModel, 'User': User
+        }
+
         if os.path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, mode='r', encoding='utf-8') \
-                    as file:
-                obj_dict = json.load(file)
-                for key, obj_data in obj_dict.items():
-                    if obj_data['__class__'] == 'BaseModel':
-                        FileStorage.__objects[key] = BaseModel(**obj_data)
+                    as storage_file:
+
+                loaded_objs = json.load(storage_file)
+
+            # Now fill in the __objects dict with loaded objects
+            for obj_id, obj_data in loaded_objs.items():
+                FileStorage.__objects.update({
+                        obj_id: classes_dict[obj_data['__class__']](**obj_data)
+                    })
