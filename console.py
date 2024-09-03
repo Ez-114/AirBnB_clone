@@ -5,6 +5,8 @@ The console module.
 Contains the entry point of the command interpreter.
 """
 import cmd
+import shlex
+
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -28,6 +30,27 @@ class HBNBCommand(cmd.Cmd):
         'City', 'Amenity', 'Place', 'Review'
     ]
 
+    def _key_value_parser(self, args):
+        """creates a dictionary from a list of strings"""
+        new_dict = {}
+        for arg in args:
+            if "=" in arg:
+                kvp = arg.split('=', 1)
+                key = kvp[0]
+                value = kvp[1]
+                if value[0] == value[-1] == '"':
+                    value = shlex.split(value)[0].replace('_', ' ')
+                else:
+                    try:
+                        value = int(value)
+                    except:
+                        try:
+                            value = float(value)
+                        except:
+                            continue
+                new_dict[key] = value
+        return new_dict
+
     def do_create(self, line):
         """
         Creates a new instance of BaseModel, saves it (to the JSON file),
@@ -40,14 +63,18 @@ class HBNBCommand(cmd.Cmd):
             'Place': Place, 'Review': Review
         }
 
-        if not line:
+        args = line.split()
+        if len(args) == 0:
             print("** class name missing **")
-        elif line not in HBNBCommand.classes_list:
-            print("** class doesn't exist **")
+            return False
+        if args[0] in classes_dict:
+            new_dict = self._key_value_parser(args[1:])
+            instance = classes_dict[args[0]](**new_dict)
         else:
-            new_instance = classes_dict[line]()
-            new_instance.save()
-            print(new_instance.id)
+            print("** class doesn't exist **")
+            return False
+        print(instance.id)
+        instance.save()
 
     def help_create(self):
         """Prints the help documentation for create."""
@@ -187,7 +214,6 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """Updates an instance based on the class name and id."""
-        import shlex
 
         args = shlex.split(line)
 
